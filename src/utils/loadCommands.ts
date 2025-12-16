@@ -46,7 +46,7 @@ async function loadCommandFiles(
     if (entry.isDirectory()) {
       // Recursively load nested folders
       await loadCommandFiles(client, fullPath, type, slashData);
-    } else if (entry.isFile() && (entry.name.endsWith(".js") || entry.name.endsWith(".ts"))) {
+    } else if (entry.isFile() && (entry.name.endsWith(".js"))) {
       const fileUrl = pathToFileURL(fullPath);
       const { default: command } = (await import(`${fileUrl}`)) as { default: Command };
         // console.log(command)
