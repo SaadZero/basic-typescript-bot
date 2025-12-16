@@ -5,6 +5,7 @@ const command = {
     data: new SlashCommandBuilder().setName("ping").setDescription("Pong"),
     async execute(interaction) {
         await interaction.deferReply();
-        await interaction.reply("HI");
+        await interaction.editReply("HI");
     },
 };
+export default command;

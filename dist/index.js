@@ -36,3 +36,33 @@ client.login(process.env.TOKEN);
 client.once("clientReady", async (client) => {
     console.log(`Logged in as ${client.user.username}`);
 });
+client.on("messageCreate", async (message) => {
+    if (!message.content.startsWith(process.env.PREFIX))
+        return;
+    const args = message.content.split("=");
+    const command = args[1];
+    // console.log(args);
+    if (command && client.prefixCommands.has(command)) {
+        const prefixCommand = client.prefixCommands.get(command);
+        try {
+            await prefixCommand?.execute(message);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+});
+client.on("interactionCreate", async (interaction) => {
+    if (interaction.isChatInputCommand()) {
+        const commandName = interaction.commandName;
+        const command = client.slashCommands.get(commandName);
+        if (!command)
+            return;
+        try {
+            await command.execute(interaction);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+});

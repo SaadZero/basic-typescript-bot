@@ -7,6 +7,7 @@ export async function loadCommands(client, dir, slashData) {
     for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
+            // console.log(entry)
             if (entry.name === "prefixCommands") {
                 await loadCommandFiles(client, fullPath, "prefix", slashData);
             }
@@ -24,13 +25,15 @@ async function loadCommandFiles(client, folderPath, type, slashData) {
     const entries = fs.readdirSync(folderPath, { withFileTypes: true });
     for (const entry of entries) {
         const fullPath = path.join(folderPath, entry.name);
+        // console.log(slashData)
         if (entry.isDirectory()) {
             // Recursively load nested folders
             await loadCommandFiles(client, fullPath, type, slashData);
         }
-        else if (entry.isFile() && entry.name.endsWith(".js")) {
+        else if (entry.isFile() && (entry.name.endsWith(".js"))) {
             const fileUrl = pathToFileURL(fullPath);
-            const { default: command } = (await import(fileUrl.toJSON()));
+            const { default: command } = (await import(`${fileUrl}`));
+            // console.log(command)
             if (!command || command.type !== type)
                 continue;
             if (type === "prefix") {
